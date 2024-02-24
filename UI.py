@@ -1,0 +1,2 @@
+from UI_add import Ui_Kart_Data_Transfer_Add
+from UI_main import Ui_Kart_Data_Transfer
