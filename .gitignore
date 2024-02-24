@@ -1,0 +1,8 @@
+*.bat
+*.spec
+*.ts
+*.ui
+__pycache__
+.vscode
+build
+dist
