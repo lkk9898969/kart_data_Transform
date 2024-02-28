@@ -292,7 +292,7 @@ def float_to_str(f:float,decimal:int=8):
     return _instance.float_to_str(float(f))
 
 if __name__=="__main__":
-    testf=Formula("y = 1.0001 * x + 0.7500085")
-    # testf.verylimit_formulainvert_evaluate(5)
-    # testf=Formula("( x - 0.7500085 ) / 1.0001")
-    # testf.evaluate(5)
+    testf=Formula("y = (  ( 2136.6000 * x )  + 109.67600 )")
+    testf.verylimit_formulainvert_evaluate(2285)
+    pass
+    

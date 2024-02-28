@@ -51,7 +51,7 @@ class Mainwindow_Controller(QtWidgets.QWidget,Ui_Kart_Data_Transfer):
     def ParaminGame_changed(self):
         text=self.Param_in_game.text()
         try:
-            evaluate=self.Data.formula.evaluate(float(text))
+            evaluate=self.Data.formula.verylimit_formulainvert_evaluate(float(text))
         except ValueError:
             evaluate=self.Data.formula.verylimit_formulainvert_evaluate(0)
         self.Param_in_xml.setText(Additional_class.float_to_str(evaluate))
