@@ -6,3 +6,5 @@ __pycache__
 .vscode
 build
 dist
+*.xml
+*.txt

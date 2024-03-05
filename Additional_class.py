@@ -23,16 +23,27 @@ class Stack :
         return len(self.items)
 
 class Formula():
-    def __init__(self,Expr:str) -> None:
-        '''please input Infix Formula'''
-        self.InputInfixFormula(Expr)
-        if (self.__Postfixformula=="a x * b +"\
-            or self.__Postfixformula=="x a * b +"):
-            self.__invertformula="y b - a /"
+    def __init__(self,Expr:str,_bool:bool) -> None:
+        '''please input Infix Formula
+        if bool is False then evaluate is unavliable.'''
+        if isinstance(_bool,bool):
+            self.bool=_bool
+        else:
+            raise TypeError("'_bool' must be boolin type.")
+        if _bool:
+            self.InputInfixFormula(Expr)
+            self.evaluate = self.__haveevaluate
+            if (self.__Postfixformula=="a x * b +"\
+                or self.__Postfixformula=="x a * b +"):
+                self.__invertformula="y b - a /"
 
-        elif (self.__Postfixformula=="a x * b -"\
-            or self.__Postfixformula=="x a * b -"):
-            self.__invertformula="y b + a /"
+            elif (self.__Postfixformula=="a x * b -"\
+                or self.__Postfixformula=="x a * b -"):
+                self.__invertformula="y b + a /"
+        else:
+            self.__formula=Expr
+            self.OutputInfixformula=lambda x=self.__formula:x
+            self.evaluate = self.__noevaluate
     
     def __PrivateInfixToPostfix(self,expr:str):
         '''https://www.geeksforgeeks.org/convert-infix-expression-to-postfix-expression/'''
@@ -148,29 +159,40 @@ class Formula():
             expr=expr.replace(i,j)
         return expr
 
-    def InputInfixFormula(self,Expr:str):
-        # expr=Expr.lower()
-        expr=Expr.replace('y','').replace('Y','').replace('=','').replace('X','x')
-        expr=expr.split()
-        Elements=[]
-        for i in expr:
-            Elements.append(i)
-        englist=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-        index=0
-        self.__replacestack={}
-        for i,element in enumerate(Elements):
-            if element not in "abcdefghijklmnopqrstuvwxyz()+*-/":
-                self.__replacestack[englist[index]]=element
-                Elements[i]=englist[index]
-                index+=1
-        Exprafterprocess=' '.join(Elements)
-        self.__Postfixformula=self.__PrivateInfixToPostfix(Exprafterprocess)
-        pass
+    def __noevaluate(self,X):
+        raise AttributeError("'Formula' object has no attribute 'evaluate' (_bool is False).")
 
-    def evaluate(self,X:float):
+    def __haveevaluate(self,X:float):
         expr=self.__Postfixformula.replace('x',str(X))
         expr=self.__expr_preprocess(expr)
         return self.__PrivateEval_Postfix(expr)
+
+    def InputInfixFormula(self,Expr:str,_bool:bool=...):
+        if isinstance(_bool,bool):
+            self.bool=_bool
+        elif _bool !=... :
+            raise TypeError("'_bool' must be boolin type.")
+        if  self.bool:
+            expr=Expr.replace('y','').replace('Y','').replace('=','').replace('X','x')
+            expr=expr.split()
+            Elements=[]
+            for i in expr:
+                Elements.append(i)
+            englist=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+            index=0
+            self.__replacestack={}
+            for i,element in enumerate(Elements):
+                if element not in "abcdefghijklmnopqrstuvwxyz()+*-/":
+                    self.__replacestack[englist[index]]=element
+                    Elements[i]=englist[index]
+                    index+=1
+            Exprafterprocess=' '.join(Elements)
+            self.__Postfixformula=self.__PrivateInfixToPostfix(Exprafterprocess)
+            self.evaluate = self.__haveevaluate
+        else:
+            self.__formula=Expr
+            self.OutputInfixformula=lambda x=self.__formula:x
+            self.evaluate = self.__noevaluate
     
     def OutputInfixformula(self):
         result = self.__PrivatePostfixToInfix(self.__Postfixformula)
@@ -184,9 +206,9 @@ class formula_data():
     @overload
     def __init__(self,dataname:str,formula:list[float],default:float|None=None) -> None : ...
     @overload
-    def __init__(self,dataname:str,formula:Formula,default:float|None=None,useable:bool=True) -> None : ...
+    def __init__(self,dataname:str,formula:Formula,default:float|int|None=None,useable:bool=True) -> None : ...
 
-    def __init__(self,dataname:str,formula:Formula,default:float|None=None,useable:bool=True) -> None:
+    def __init__(self,dataname:str,formula:Formula,default:float|int|None=None,useable:bool=True) -> None:
         self.dataname=dataname
         if isinstance(formula,Formula):
             self.formula=formula
@@ -209,7 +231,7 @@ class formula_data():
         except ZeroDivisionError:
             b=0
         b=float_to_str(b,_decimal)
-        return Formula(f"y = {a} * x + {b}")
+        return Formula(f"y = {a} * x + {b}",True)
 
     def CreateFormula(self,parameters:list[float]) -> None:
         self.formula = self.__formulacaculate(parameters)
@@ -228,7 +250,7 @@ class formula_data():
 
 class formula_file_processer():
     def __init__(self,filename:str) -> None:
-        self.data={str():formula_data(None,Formula(""))}
+        self.data={str():formula_data(None,Formula("",False))}
         self.data.clear()
         self.__filename=filename
 
@@ -238,9 +260,9 @@ class formula_file_processer():
             while temp:
                 elements=temp.split(',')
                 dataname=elements[0].removesuffix(" ")
-                formula=Formula(elements[1])
                 default=self.__readdefault(elements[2])
                 useable=self.__readbool(elements[3])
+                formula=Formula(elements[1],useable)
                 self.data[dataname]=formula_data(dataname,formula,default,useable)
                 temp=f.readline()
     
@@ -292,7 +314,6 @@ def float_to_str(f:float,decimal:int=8):
     return _instance.float_to_str(float(f))
 
 if __name__=="__main__":
-    testf=Formula("y = (  ( 2136.6000 * x )  + 109.67600 )")
-    testf.verylimit_formulainvert_evaluate(2285)
+    testf=Formula("y = true ? 1 : 0",False)
     pass
     
