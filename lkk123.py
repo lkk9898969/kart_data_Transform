@@ -43,6 +43,8 @@ else:
             return None
     
     def __setoutput(index:str,content:float|int):
+        if content.is_integer():
+            content = int(content)
         if isinstance(content,float):
             global output
             output += 'kart.' + index + ' = ' + float_to_str(content) + '\n'
