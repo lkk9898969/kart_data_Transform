@@ -47,10 +47,10 @@ else:
             content = int(content)
         if isinstance(content,float):
             global output
-            output += 'kart.' + index + ' = ' + float_to_str(content) + '\n'
+            output += 'Kart.' + index + ' = ' + float_to_str(content) + 'f\n'
             outputxmlroot.set(index,float_to_str(content))
         elif isinstance(content,int):
-            output += 'kart.' + index + ' = ' + str(content) + '\n'
+            output += 'Kart.' + index + ' = ' + str(content) + 'f\n'
             outputxmlroot.set(index,str(content))
         else:
             raise TypeError("'content' type is wrong.")
