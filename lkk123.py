@@ -43,10 +43,15 @@ else:
             return None
     
     def __setoutput(index:str,content:float|int):
-        if content.is_integer():
-            content = int(content)
+        global output
+        try:
+            if content.is_integer():
+                content = int(content)
+        except AttributeError:
+            output += 'Kart.' + index + ' = ' + str(content) + 'f\n'
+            outputxmlroot.set(index,str(content))
+            return
         if isinstance(content,float):
-            global output
             output += 'Kart.' + index + ' = ' + float_to_str(content) + 'f\n'
             outputxmlroot.set(index,float_to_str(content))
         elif isinstance(content,int):

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 draftMulAccelFactor , y = 1 * x + 0 , 1 , true
 draftTick , y = 1 * x + 0, 0 , true
 driftBoostMulAccelFactor , y = (  ( 1.0 * x )  + 0.0 )  , 1.31 , True
@@ -68,7 +67,6 @@ useExtendedAfterBoosterMore , y = x ? 1 : 0 , 0 , false
 wallCollGaugeCooldownTime , y = 1000 * x + 0 , 0 , true
 wallCollGaugeMaxVelLoss , y = 1 * x + 0 , 200 , true
 wallCollGaugeMinVelBound , y = 1 * x + 0 , 200 , true
-=======
 draftMulAccelFactor , y = 1 * x + 0 , 1 , true
 draftTick , y = 1 * x + 0, 0 , true
 driftBoostMulAccelFactor , y = (  ( 1.0 * x )  + 0.0 )  , 1.31 , True
@@ -138,5 +136,4 @@ useExtendedAfterBoosterMore , y = x ? 1 : 0 , 0 , false
 wallCollGaugeCooldownTime , y = 1000 * x + 0 , 0 , true
 wallCollGaugeMaxVelLoss , y = 1 * x + 0 , 200 , true
 wallCollGaugeMinVelBound , y = 1 * x + 0 , 200 , true
->>>>>>> 05b95923247744c67e29af71377f026c4b68a03f
 wallCollGaugeMinVelLoss , y = 1 * x + 0 , 50 , true
