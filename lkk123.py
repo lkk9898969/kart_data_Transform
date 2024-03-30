@@ -48,14 +48,14 @@ else:
             if content.is_integer():
                 content = int(content)
         except AttributeError:
-            output += 'Kart.' + index + ' = ' + str(content) + '\n'
+            output += 'Kart.' + index + ' = ' + str(content) + ';\n'
             outputxmlroot.set(index,str(content))
             return
         if isinstance(content,float):
-            output += 'Kart.' + index + ' = ' + float_to_str(content) + 'f\n'
+            output += 'Kart.' + index + ' = ' + float_to_str(content) + 'f;\n'
             outputxmlroot.set(index,float_to_str(content))
         elif isinstance(content,int):
-            output += 'Kart.' + index + ' = ' + str(content) + '\n'
+            output += 'Kart.' + index + ' = ' + str(content) + ';\n'
             outputxmlroot.set(index,str(content))
         else:
             raise TypeError("'content' type is wrong.")
