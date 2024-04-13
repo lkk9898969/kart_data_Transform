@@ -30,9 +30,8 @@ class Formula():
             self.bool=_bool
         else:
             raise TypeError("'_bool' must be boolin type.")
+        self.InputInfixFormula(Expr,_bool)
         if _bool:
-            self.InputInfixFormula(Expr)
-            self.evaluate = self.__haveevaluate
             if (self.__Postfixformula=="a x * b +"\
                 or self.__Postfixformula=="x a * b +"):
                 self.__invertformula="y b - a /"
@@ -40,10 +39,7 @@ class Formula():
             elif (self.__Postfixformula=="a x * b -"\
                 or self.__Postfixformula=="x a * b -"):
                 self.__invertformula="y b + a /"
-        else:
-            self.__formula=Expr
-            self.OutputInfixformula=lambda x=self.__formula:x
-            self.evaluate = self.__noevaluate
+
     
     def __PrivateInfixToPostfix(self,expr:str):
         '''https://www.geeksforgeeks.org/convert-infix-expression-to-postfix-expression/'''
