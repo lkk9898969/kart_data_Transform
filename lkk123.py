@@ -26,7 +26,7 @@ try:
 except Exception as e:
     xml=None
     _type=1
-    output = str(e.with_traceback(None))
+    output = e.__repr__()
 else:
     def __readbool(_str:str):
             if 'true' in _str.lower():
@@ -40,6 +40,8 @@ else:
                 result = int(result)
             return result
         except ValueError:
+            if "ForwardAccelForce" in _any:
+                return "ForwardAccelForce"
             return None
     
     def __setoutput(index:str,content:float|int):
@@ -77,47 +79,48 @@ else:
                 data[dataname]=formula_data(dataname,formula,default,useable)
                 temp=f.readline()
         parse=ElementTree.parse(xml)
-        root=parse.getroot()
+        paramroot=parse.getroot()
         for i in data.keys():
             try:
+                paramdataname=i
+                kartdataname=i
                 if i == 'StartForwardAccelForceSpeed':
-                    i='StartForwardAccelFactorSpeed'
+                    paramdataname='StartForwardAccelFactorSpeed'
                 elif i == 'StartForwardAccelForceItem':
-                    i='StartForwardAccelFactorItem'
-                value=root.attrib[i]
-                if i=='StartForwardAccelFactorSpeed':
-                    i='StartForwardAccelForceSpeed'
-                elif i=='StartForwardAccelFactorItem':
-                    i='StartForwardAccelForceItem'
-                if data[i].useable:
-                    value = data[i].formula.evaluate(value)
-                elif i == 'instAccelGaugeMinUsable':
+                    paramdataname='StartForwardAccelFactorItem'
+                value=paramroot.attrib[paramdataname]
+                if data[kartdataname].useable:
+                    value = data[kartdataname].formula.evaluate(value)
+                elif kartdataname == 'instAccelGaugeMinUsable':
                     value = float(outputxmlroot.attrib['instAccelGaugeLength']) * float(value)
-                elif 'x ? 1 : 0' in data[i].formula.OutputInfixformula():
+                elif "StartForwardAccelForce" in kartdataname:
+                     tempformula=data[kartdataname].formula.OutputInfixformula().replace("ForwardAccelForce",outputxmlroot.attrib["ForwardAccelForce"])
+                     tempformula=Formula(tempformula,True)
+                     value = tempformula.evaluate(value)
+                elif 'x ? 1 : 0' in data[kartdataname].formula.OutputInfixformula():
                     if __readbool(value):
                         value=1
                     else:
                         value=0
                 else:
-                    value = data[i].default
-                __setoutput(i,value)
+                    value = data[kartdataname].default
+                __setoutput(kartdataname,value)
             except KeyError:
-                if i=='StartForwardAccelFactorSpeed':
-                    i='StartForwardAccelForceSpeed'
-                elif i=='StartForwardAccelFactorItem':
-                    i='StartForwardAccelForceItem'
-                __setoutput(i,data[i].default)
+                default=data[kartdataname].default
+                if "StartForwardAccelForce" in kartdataname:
+                    default=float(outputxmlroot.attrib["ForwardAccelForce"])
+                __setoutput(kartdataname,default)
     except Exception as e:
         xml=None
         _type=1
-        output = str(e)
+        output = e.__repr__()
 
 finally:
     
     if _type==1:
-        with open("param.xml",'w',encoding='utf-8') as f:
+        with open("param_.xml",'w',encoding='utf-8') as f:
             f.write(output)
     elif _type == 0:
-            outputxml.write("param.xml")
+            outputxml.write("param_.xml")
 
     
